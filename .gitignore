@@ -1,0 +1,6 @@
+# ide project files
+.idea
+.vscode
+
+# composer vendor dir
+/vendor

@@ -1,0 +1,21 @@
+{
+    "name": "alex-654/task-manager",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexey",
+            "email": "vianosenko@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Core\\": "core",
+            "App\\": "app"
+        },
+        "files": [
+            "core/Render.php"
+        ]
+    },
+    "require": {}
+}

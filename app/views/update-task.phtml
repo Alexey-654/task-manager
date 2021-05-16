@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Update Task</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/dashboard.css" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Task Manager</a>
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                <a class="btn btn-primary" href="/login" data-method='post'>Log In</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                </div>
+            </nav>
+        </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+    <?php if (isset($_SESSION['alert'])) : ?>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong><?= $_SESSION['alert'] ?></strong>
+            <?php unset( $_SESSION['alert'] );?>
+        </div>
+    <?php endif; ?>
+
+            <div class="d-flex justify-content-between my-3">
+                <div>
+                    <h1 class="my-0">Update task</h1>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-lg-5">
+                    <form method="POST">
+                        <div class="form-group">
+                            <input type="text" name="task[name]" class="form-control" placeholder="Name" value="<?= htmlspecialchars($task['name']) ?>" required readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="email" name="task[email]" class="form-control" placeholder="Email" value="<?= htmlspecialchars($task['email']) ?>" required readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" name="task[status]" class="form-control" placeholder="Status" value="<?= htmlspecialchars($task['status']) ?>" required>
+                        </div>
+
+                        <textarea class="form-control" name="task[description]" rows="3" placeholder="Task description" required><?= htmlspecialchars($task['description']) ?></textarea>
+
+                        <button type="submit" class="btn btn-primary my-3">Submit</button>
+                    </form>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+
+</body>
+</html>
