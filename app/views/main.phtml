@@ -58,7 +58,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (isset($tasks)) : ?>
+                    <?php if (!empty($tasks)) : ?>
                         <?php foreach($tasks as $task) : ?>
                         <tr>
                             <td><a href="/update-task?id=<?= $task['id'] ?>"><?= htmlspecialchars($task['name']) ?></a></td>

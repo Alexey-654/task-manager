@@ -21,7 +21,7 @@ class Task
     {
         $formData = $this->quoteSQL($formData);
         ['name' => $name, 'email' => $email, 'description' => $description] = $formData;
-        return $this->pdo->exec("INSERT into task (name, email, description) values ('$name', '$email', '$description')");
+        return $this->pdo->exec("INSERT into task (name, email, description) values ($name, $email, $description)");
     }
 
     public function updateTask($id, $formData)
