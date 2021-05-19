@@ -13,9 +13,10 @@ class TaskController extends Controller
         $sort = $_GET['sort'] ?? 'id desc';
         $pageQuery = isset($_GET['page']) ? "page={$_GET['page']}&" : '';
         $sortQuery = isset($_GET['sort']) ? "&sort={$_GET['sort']}" : '';
-        $model = new Task();
-        $tasks = $model->getTasks($page, $sort);
-        $totalPages = $model->getTotalPages();
+        $perPageLimit = 3;
+        $tasks = Task::getTasks($page, $sort, $perPageLimit);
+        $totalTasks = Task::getTasksCount();
+        $totalPages = ceil($totalTasks / $perPageLimit);
 
         return $this->render('main', [
             'tasks' => $tasks,
@@ -28,26 +29,28 @@ class TaskController extends Controller
 
     public function create()
     {
+        $model = new Task();
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
-            $model = new Task();
             if($model->createTask($_POST['task'])) {
                 $this->addFlash('success', 'Task successfully created');
                 $this->redirect('/');
             }
         }
-        return $this->render('create-task');
+
+        return $this->render('create-task', [
+            'model' => $model,
+        ]);
     }
 
     public function update()
     {
+        $task = Task::findTask($_GET['id']);
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
-            $model = new Task();
-            if($model->updateTask($_GET['id'], $_POST['task'])) {
+            if(Task::updateTask($_GET['id'], $_POST['task'])) {
                 $this->addFlash('success', 'Task successfully updated');
                 $this->redirect('/');
             }
         }
-        $task = (new Task())->getTask($_GET['id']);
 
         return $this->render('update-task', ['task' => $task]);
     }

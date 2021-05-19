@@ -7,53 +7,76 @@ use App\Db\Connection;
 
 class Task
 {
-    public static $table = 'task';
-    public $perPageLimit;
-    public $db;
+    private static $table = 'task';
+    private $db;
+    public $id;
+    public $name;
+    public $email;
+    public $description;
+    public $status;
+    public $errors;
 
-    public function __construct($perPageLimit = 3)
+
+    public function __construct($properties = [])
     {
-        $this->perPageLimit = $perPageLimit;
         $this->db = Connection::getInstance()->getConnection();
     }
 
-    public function createTask($formData)
+    public function validate()
+    {
+
+    }
+
+    public function save()
+    {
+
+    }
+
+    public function createTask($formData): bool
     {
         ['name' => $name, 'email' => $email, 'description' => $description] = $formData;
         $stmt = $this->db->prepare("INSERT INTO task (name, email, description) values (?, ?, ?)");
         return $stmt->execute([$name, $email, $description]);
     }
 
-    public function updateTask($id, $formData)
+    public static function updateTask($id, $formData): bool
     {
+        $db = self::getConnection();
         ['status' => $status, 'description' => $description] = $formData;
-        $stmt = $this->db->prepare("UPDATE task SET description = ?, status = ?  WHERE id = ?");
+        $stmt = $db->prepare("UPDATE task SET description = ?, status = ?  WHERE id = ?");
         return $stmt->execute([$description, $status, $id]);
     }
 
-    public function getTask($id)
+    public static function findTask($id): Task
     {
-        $stmt = $this->db->prepare("SELECT * FROM task WHERE id = ?");
+        $db = self::getConnection();
+        $stmt = $db->prepare("SELECT * FROM task WHERE id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
 
-    public function getTasks($page, $sort)
+    public static function getTasks($page, $sort, $perPageLimit = 3): array
     {
-        $offset = ($page - 1) * $this->perPageLimit;
+        $db = self::getConnection();
+        $offset = ($page - 1) * $perPageLimit;
         $sort = explode(' ', $sort);
         [$field, $order] = $sort;
-        $stmt = $this->db->prepare("SELECT * FROM task ORDER BY $field $order LIMIT :limit OFFSET :offset");
-        $stmt->bindValue(':limit', $this->perPageLimit, \PDO::PARAM_INT);
+        $stmt = $db->prepare("SELECT * FROM task ORDER BY $field $order LIMIT :limit OFFSET :offset");
+        $stmt->bindValue(':limit', $perPageLimit, \PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
     }
 
-    public function getTotalPages()
+    public static function getTasksCount(): int
     {
+        $db = self::getConnection();
         $query = "SELECT COUNT(*) FROM task";
-        $totalRows = $this->db->query($query)->fetchColumn();
-        return ceil($totalRows / $this->perPageLimit);
+        return $db->query($query)->fetchColumn();
+    }
+
+    private static function getConnection(): \PDO
+    {
+        return Connection::getInstance()->getConnection();
     }
 }
