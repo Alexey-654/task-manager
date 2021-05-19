@@ -2,8 +2,7 @@
 
 namespace Core;
 
-
-class Application
+class Router
 {
     private $handlers = [];
 
@@ -27,6 +26,12 @@ class Application
             $preparedRoute = preg_quote($route, '/');
             if ($method === $handlerMethod && preg_match("/^$preparedRoute$/i", $path)) {
                 echo $handler();
+                die;
+            }
+            if ($route === 'error') {
+                http_response_code(404);
+                echo $handler();
+                die;
             }
         }
     }

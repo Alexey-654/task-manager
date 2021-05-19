@@ -32,10 +32,10 @@
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 
-    <?php if (isset($_SESSION['alert'])) : ?>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong><?= $_SESSION['alert'] ?></strong>
-            <?php unset( $_SESSION['alert'] );?>
+    <?php if (isset($_SESSION['flash'])) : ?>
+        <div class="alert alert-<?= $_SESSION['flash']['class'] ?> alert-dismissible fade show" role="alert">
+            <strong><?= $_SESSION['flash']['message'] ?></strong>
+            <?php unset( $_SESSION['flash'] );?>
         </div>
     <?php endif; ?>
 

@@ -1,22 +1,22 @@
 <?php
 
-use Core\Application;
+use Core\Router;
 use App\Controllers\TaskController;
 use App\Controllers\AuthController;
 use function Core\Render\render;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+$router = new Router();
 
-$app = new Application();
+$router->get('/', fn() => (new TaskController())->index());
+$router->get('/create-task', fn() => (new TaskController())->create());
+$router->post('/create-task', fn() => (new TaskController())->create());
+$router->get('/update-task', fn() => (new TaskController())->update());
+$router->post('/update-task', fn() => (new TaskController())->update());
+$router->get('/login', fn() => (new AuthController())->login());
+$router->post('/login', fn() => (new AuthController())->login());
+$router->post('/logout', fn() => (new AuthController())->logout());
+$router->get('error', fn() => render('404'));
 
-$app->get('/', fn() => (new TaskController())->index());
-$app->get('/create-task', fn() => (new TaskController())->create());
-$app->post('/create-task', fn() => (new TaskController())->create());
-$app->get('/update-task', fn() => (new TaskController())->update());
-$app->post('/update-task', fn() => (new TaskController())->update());
-$app->get('/login', fn() => (new AuthController())->login());
-$app->post('/login', fn() => (new AuthController())->login());
-$app->post('/logout', fn() => (new AuthController())->logout());
-
-$app->run();
+$router->run();

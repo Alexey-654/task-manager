@@ -2,66 +2,58 @@
 
 namespace App\Models;
 
-use PDO;
-use App\Config\Config;
+use db;
+use App\Db\Connection;
 
 class Task
 {
     public static $table = 'task';
-    public $limit = 10;
-    public $pdo;
+    public $perPageLimit;
+    public $db;
 
-    public function __construct($limit = null)
+    public function __construct($perPageLimit = 3)
     {
-        $this->limit = $limit ? $limit : $this->limit;
-        $this->pdo = new PDO(Config::DSN, Config::DB_USER, Config::DB_PASSWORD, Config::OPTIONS);
+        $this->perPageLimit = $perPageLimit;
+        $this->db = Connection::getInstance()->getConnection();
     }
 
-    public function addTask($formData)
+    public function createTask($formData)
     {
-        $formData = $this->quoteSQL($formData);
         ['name' => $name, 'email' => $email, 'description' => $description] = $formData;
-        return $this->pdo->exec("INSERT into task (name, email, description) values ($name, $email, $description)");
+        $stmt = $this->db->prepare("INSERT INTO task (name, email, description) values (?, ?, ?)");
+        return $stmt->execute([$name, $email, $description]);
     }
 
     public function updateTask($id, $formData)
     {
-        $data = $this->quoteSQL($formData);
-        $id = $this->quoteSQL($id);
-        ['status' => $status, 'description' => $description] = $data;
-        return $this->pdo->exec("UPDATE task SET description = $description, status = $status  WHERE id = $id;");
+        ['status' => $status, 'description' => $description] = $formData;
+        $stmt = $this->db->prepare("UPDATE task SET description = ?, status = ?  WHERE id = ?");
+        return $stmt->execute([$description, $status, $id]);
     }
 
     public function getTask($id)
     {
-        $query = "SELECT * FROM task WHERE id = $id;";
-        $result = $this->pdo->prepare($query);
-        $result->execute();
-        return $result->fetch();
+        $stmt = $this->db->prepare("SELECT * FROM task WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
     }
 
     public function getTasks($page, $sort)
     {
-        $offset = ($page - 1) * $this->limit;
+        $offset = ($page - 1) * $this->perPageLimit;
+        $sort = explode(' ', $sort);
         [$field, $order] = $sort;
-        $query = "SELECT * FROM task ORDER BY $field $order LIMIT $this->limit OFFSET $offset;";
-        $result = $this->pdo->prepare($query);
-        $result->execute();
-        return $result->fetchAll();
+        $stmt = $this->db->prepare("SELECT * FROM task ORDER BY $field $order LIMIT :limit OFFSET :offset");
+        $stmt->bindValue(':limit', $this->perPageLimit, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
     }
 
     public function getTotalPages()
     {
         $query = "SELECT COUNT(*) FROM task";
-        $totalRows = $this->pdo->query($query)->fetchColumn();
-        return ceil($totalRows / $this->limit);
-    }
-
-    private function quoteSQL($data)
-    {
-        if (is_array($data)) {
-            return array_map(fn($item) => $this->pdo->quote($item), $data);
-        }
-        return $this->pdo->quote($data);
+        $totalRows = $this->db->query($query)->fetchColumn();
+        return ceil($totalRows / $this->perPageLimit);
     }
 }

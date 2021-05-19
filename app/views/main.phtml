@@ -32,10 +32,10 @@
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 
-    <?php if (isset($_SESSION['alert'])) : ?>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong><?= $_SESSION['alert'] ?></strong>
-            <?php unset( $_SESSION['alert'] );?>
+    <?php if (isset($_SESSION['flash'])) : ?>
+        <div class="alert alert-<?= $_SESSION['flash']['class'] ?> alert-dismissible fade show" role="alert">
+            <strong><?= $_SESSION['flash']['message'] ?></strong>
+            <?php unset( $_SESSION['flash'] );?>
         </div>
     <?php endif; ?>
 
@@ -51,10 +51,10 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th>name <a class="h5 pr-2" href='?sort=name+desc'>&#9660;</a><a class="h5 pr-2" href='?sort=name+asc'>&#9650;</a></th>
-                        <th>email <a class="h5 pr-2" href='?sort=email+desc'>&#9660;</a><a class="h5 pr-2" href='?sort=email+asc'>&#9650;</a></th>
+                        <th>name <a class="h5 pr-2" href='?<?= $pageQuery ?>sort=name+desc'>&#9660;</a><a class="h5 pr-2" href='?<?= $pageQuery ?>sort=name+asc'>&#9650;</a></th>
+                        <th>email <a class="h5 pr-2" href='?<?= $pageQuery ?>sort=email+desc'>&#9660;</a><a class="h5 pr-2" href='?<?= $pageQuery ?>sort=email+asc'>&#9650;</a></th>
                         <th>description</th>
-                        <th>status <a class="h5 pr-2" href='?sort=status+desc'>&#9660;</a><a class="h5 pr-2" href='?sort=status+asc'>&#9650;</a></th>
+                        <th>status <a class="h5 pr-2" href='?<?= $pageQuery ?>sort=status+desc'>&#9660;</a><a class="h5 pr-2" href='?<?= $pageQuery ?>sort=status+asc'>&#9650;</a></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,7 +76,7 @@
             <?php if(isset($totalPages)): ?>
                 <ul class="pagination">
                     <?php for ($i = 1; $i <= $totalPages; $i += 1): ?>
-                    <li class="page-item"><a class="page-link" href="/?page=<?= $i ?>"><?= $i ?></a></li>
+                    <li class="page-item"><a class="page-link" href="/?page=<?= $i, $sortQuery ?>"><?= $i ?></a></li>
                     <?php endfor; ?>
                 </ul>
             <?php endif; ?>

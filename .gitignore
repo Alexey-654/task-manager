@@ -4,3 +4,5 @@
 
 # composer vendor dir
 /vendor
+
+/app/config/db_local.php
