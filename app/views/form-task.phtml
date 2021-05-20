@@ -49,17 +49,24 @@
                 <div class="col-12 col-lg-5">
                     <form method="POST">
                         <div class="form-group">
-                            <input type="text" name="task[name]" class="form-control <?= $validationResultClassName[0] ?>" placeholder="Name" value="<?= $model->name ?>" required>
-                            <div class="<?= $validationResultClassName[0] ?>-feedback">
-                                <?= $validationMessageForName ?>
+                            <input type="text" name="task[name]" class="form-control" placeholder="Name" value="<?= $model->name ?>">
+                            <div class="feedback text-danger">
+                               <?= $model->errors['name']['message'] ?? ''?>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <input type="email" name="task[email]" class="form-control" placeholder="Email" required>
+                            <input type="text" name="task[email]" class="form-control" placeholder="Email" value="<?= $model->email ?>">
+                            <div class="feedback text-danger">
+                                <?= $model->errors['email']['message'] ?? '' ?>
+                            </div>
                         </div>
 
-                        <textarea class="form-control" name="task[description]" rows="3" placeholder="Task description" required></textarea>
+
+                        <textarea class="form-control" name="task[description]" rows="3" placeholder="Task description"><?= $model->description ?></textarea>
+                        <div class="feedback text-danger">
+                            <?= $model->errors['description']['message'] ?? '' ?>
+                        </div>
 
                         <button type="submit" class="btn btn-primary my-3">Submit</button>
                     </form>

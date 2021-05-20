@@ -19,10 +19,10 @@ class TaskController extends Controller
         $totalPages = ceil($totalTasks / $perPageLimit);
 
         return $this->render('main', [
-            'tasks' => $tasks,
-            'totalPages' => $totalPages,
-            'pageQuery' => $pageQuery,
-            'sortQuery' => $sortQuery,
+                'tasks' => $tasks,
+                'totalPages' => $totalPages,
+                'pageQuery' => $pageQuery,
+                'sortQuery' => $sortQuery,
             ]
         );
     }
@@ -31,27 +31,29 @@ class TaskController extends Controller
     {
         $model = new Task();
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
-            if($model->createTask($_POST['task'])) {
+            $model->load($_POST['task']);
+            if ($model->save()) {
                 $this->addFlash('success', 'Task successfully created');
                 $this->redirect('/');
             }
         }
 
-        return $this->render('create-task', [
+        return $this->render('form-task', [
             'model' => $model,
         ]);
     }
 
     public function update()
     {
-        $task = Task::findTask($_GET['id']);
+        $model = Task::findModel($_GET['id']);
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
-            if(Task::updateTask($_GET['id'], $_POST['task'])) {
+            $model->load($_POST['task']);
+            if ($model->save()) {
                 $this->addFlash('success', 'Task successfully updated');
                 $this->redirect('/');
             }
         }
 
-        return $this->render('update-task', ['task' => $task]);
+        return $this->render('form-task', ['model' => $model,]);
     }
 }

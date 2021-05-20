@@ -2,57 +2,79 @@
 
 namespace App\Models;
 
-use db;
 use App\Db\Connection;
 
 class Task
 {
     private static $table = 'task';
-    private $db;
     public $id;
     public $name;
     public $email;
     public $description;
     public $status;
-    public $errors;
+    public $errors = [];
 
-
-    public function __construct($properties = [])
+    public function load($data = [])
     {
-        $this->db = Connection::getInstance()->getConnection();
+        $this->id = $data['id'] ?? $this->id;
+        $this->name = $data['name'] ?? $this->name;
+        $this->email = $data['email'] ?? $this->email;
+        $this->description = $data['description'] ?? $this->description;
+        $this->status = $data['status'] ?? $this->status;
+    }
+
+    public function save(): bool
+    {
+        $this->validate();
+        if(!empty($this->errors)) {
+            return false;
+        }
+        if (!$this->id) {
+            return $this->insert();
+        } else {
+            return $this->update();
+        }
+    }
+
+    public function insert():bool
+    {
+        $db = self::getConnection();
+        $stmt = $db->prepare("INSERT INTO task (name, email, description) values (?, ?, ?)");
+        return $stmt->execute([$this->name, $this->email, $this->description]);
+    }
+
+    public function update():bool
+    {
+        $db = self::getConnection();
+        $stmt = $db->prepare("UPDATE task SET description = ?, status = ?  WHERE id = ?");
+        return $stmt->execute([$this->description, $this->status, $this->id]);
     }
 
     public function validate()
     {
-
+        if (empty($this->name)) {
+            $this->errors['name']['message'] = 'Field name is required';
+        }
+        if (empty($this->email)) {
+            $this->errors['email']['message'] = 'Field email is required';
+        }
+        if (empty($this->description)) {
+            $this->errors['description']['message'] = 'Field description is required';
+        }
     }
 
-    public function save()
-    {
-
-    }
-
-    public function createTask($formData): bool
-    {
-        ['name' => $name, 'email' => $email, 'description' => $description] = $formData;
-        $stmt = $this->db->prepare("INSERT INTO task (name, email, description) values (?, ?, ?)");
-        return $stmt->execute([$name, $email, $description]);
-    }
-
-    public static function updateTask($id, $formData): bool
-    {
-        $db = self::getConnection();
-        ['status' => $status, 'description' => $description] = $formData;
-        $stmt = $db->prepare("UPDATE task SET description = ?, status = ?  WHERE id = ?");
-        return $stmt->execute([$description, $status, $id]);
-    }
-
-    public static function findTask($id): Task
+    public static function findModel($id)
     {
         $db = self::getConnection();
         $stmt = $db->prepare("SELECT * FROM task WHERE id = ?");
         $stmt->execute([$id]);
-        return $stmt->fetch();
+        $modelData = $stmt->fetch();
+        if ($modelData) {
+            $model = new self();
+            $model->load($modelData);
+            return $model;
+        }
+        return false;
     }
 
     public static function getTasks($page, $sort, $perPageLimit = 3): array
