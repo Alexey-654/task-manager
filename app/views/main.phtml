@@ -16,7 +16,15 @@
         <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Task Manager</a>
         <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
-                <a class="btn btn-primary" href="/login" data-method='post'>Log In</a>
+                <?php if (\Core\App::$app['user']->isAdmin()): ?>
+                <form method="post" class="m-0" action="/logout">
+                    <button type="submit" class="btn btn-primary">
+                    Log Out
+                    </button>
+                </form>
+                <?php else: ?>
+                    <a class="btn btn-primary" href="/login" data-method='post'>Log In</a>
+                <?php endif; ?>
             </li>
         </ul>
     </nav>
@@ -33,7 +41,7 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 
     <?php if (isset($_SESSION['flash'])) : ?>
-        <div class="alert alert-<?= $_SESSION['flash']['class'] ?> alert-dismissible fade show" role="alert">
+        <div class="alert alert-<?= $_SESSION['flash']['class'] ?>" role="alert">
             <strong><?= $_SESSION['flash']['message'] ?></strong>
             <?php unset( $_SESSION['flash'] );?>
         </div>

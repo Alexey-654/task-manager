@@ -38,15 +38,22 @@ class TaskController extends Controller
             }
         }
 
-        return $this->render('form-task', [
+        return $this->render('create-task', [
             'model' => $model,
         ]);
     }
 
     public function update()
     {
+        if (!\Core\App::$app['user']->isAdmin()) {
+            $this->addFlash('success', 'You don\'t have permission to access this resource');
+            $this->redirect('/');
+        }
+
+
         $model = Task::findModel($_GET['id']);
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
+            // print_r($_POST['task']); die;
             $model->load($_POST['task']);
             if ($model->save()) {
                 $this->addFlash('success', 'Task successfully updated');
@@ -54,6 +61,6 @@ class TaskController extends Controller
             }
         }
 
-        return $this->render('form-task', ['model' => $model,]);
+        return $this->render('update-task', ['model' => $model]);
     }
 }

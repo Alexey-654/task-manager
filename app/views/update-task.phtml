@@ -47,20 +47,30 @@
 
             <div class="row">
                 <div class="col-12 col-lg-5">
+
+
+
                     <form method="POST">
                         <div class="form-group">
-                            <input type="text" name="task[name]" class="form-control" placeholder="Name" value="<?= htmlspecialchars($task['name']) ?>" required readonly>
+                            <input type="text" name="task[name]" class="form-control" placeholder="Name" value="<?= $model->name ?>" readonly>
                         </div>
 
                         <div class="form-group">
-                            <input type="email" name="task[email]" class="form-control" placeholder="Email" value="<?= htmlspecialchars($task['email']) ?>" required readonly>
+                            <input type="text" name="task[email]" class="form-control" placeholder="Email" value="<?= $model->email ?>" readonly>
                         </div>
 
-                        <div class="form-group">
-                            <input type="text" name="task[status]" class="form-control" placeholder="Status" value="<?= htmlspecialchars($task['status']) ?>" required>
+
+                        <textarea class="form-control" name="task[description]" rows="3" placeholder="Task description"><?= $model->description ?></textarea>
+                        <div class="feedback text-danger">
+                            <?= $model->errors['description']['message'] ?? '' ?>
                         </div>
 
-                        <textarea class="form-control" name="task[description]" rows="3" placeholder="Task description" required><?= htmlspecialchars($task['description']) ?></textarea>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="task[status]" value="completed" id="defaultCheck1" <?=  $model->status === 'completed' ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="defaultCheck1">
+                                Completed
+                            </label>
+                        </div>
 
                         <button type="submit" class="btn btn-primary my-3">Submit</button>
                     </form>

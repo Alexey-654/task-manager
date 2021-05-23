@@ -6,12 +6,16 @@ use App\Db\Connection;
 
 class Task
 {
+    const STATUS_NEW = 1;
+    const STATUS_COMPLETED = 2;
+
     private static $table = 'task';
     public $id;
     public $name;
     public $email;
     public $description;
     public $status;
+    public $edited;
     public $errors = [];
 
     public function load($data = [])
@@ -52,6 +56,9 @@ class Task
 
     public function validate()
     {
+        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            $this->errors['email']['message'] = 'Email is not valid';
+        }
         if (empty($this->name)) {
             $this->errors['name']['message'] = 'Field name is required';
         }

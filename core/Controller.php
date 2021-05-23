@@ -19,7 +19,6 @@ class Controller
 
     public function addFlash($class, $message)
     {
-        session_start();
         $_SESSION['flash'] = ['class' => $class, 'message' => $message];
     }
 }
