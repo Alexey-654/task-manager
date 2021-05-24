@@ -23,6 +23,9 @@ class Task
         $this->id = $data['id'] ?? $this->id;
         $this->name = $data['name'] ?? $this->name;
         $this->email = $data['email'] ?? $this->email;
+        if(!empty($this->description) && $data['description'] !== $this->description) {
+            $this->edited = true;
+        }
         $this->description = $data['description'] ?? $this->description;
         $this->status = $data['status'] ?? $this->status;
     }
@@ -50,8 +53,8 @@ class Task
     public function update():bool
     {
         $db = self::getConnection();
-        $stmt = $db->prepare("UPDATE task SET description = ?, status = ?  WHERE id = ?");
-        return $stmt->execute([$this->description, $this->status, $this->id]);
+        $stmt = $db->prepare("UPDATE task SET description = ?, status = ?, edited = ?  WHERE id = ?");
+        return $stmt->execute([$this->description, $this->status, $this->edited, $this->id]);
     }
 
     public function validate()

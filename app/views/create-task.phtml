@@ -13,13 +13,21 @@
 <body>
 
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Task Manager</a>
-        <ul class="navbar-nav px-3">
-            <li class="nav-item text-nowrap">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Task Manager</a>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <?php if (\Core\App::$app['user']->isAdmin()): ?>
+                <form method="post" class="m-0" action="/logout">
+                    <button type="submit" class="btn btn-primary">
+                        Log Out
+                    </button>
+                </form>
+            <?php else: ?>
                 <a class="btn btn-primary" href="/login" data-method='post'>Log In</a>
-            </li>
-        </ul>
-    </nav>
+            <?php endif; ?>
+        </li>
+    </ul>
+</nav>
 
     <div class="container-fluid">
         <div class="row">

@@ -63,6 +63,7 @@
                         <th>email <a class="h5 pr-2" href='?<?= $pageQuery ?>sort=email+desc'>&#9660;</a><a class="h5 pr-2" href='?<?= $pageQuery ?>sort=email+asc'>&#9650;</a></th>
                         <th>description</th>
                         <th>status <a class="h5 pr-2" href='?<?= $pageQuery ?>sort=status+desc'>&#9660;</a><a class="h5 pr-2" href='?<?= $pageQuery ?>sort=status+asc'>&#9650;</a></th>
+                        <th>edited</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,6 +74,7 @@
                             <td><?= htmlspecialchars($task['email']) ?></td>
                             <td><?= htmlspecialchars($task['description']) ?></td>
                             <td><?= htmlspecialchars($task['status']) ?></td>
+                            <td><?= $task['edited'] == 1 ? 'yes' : 'no' ?></td>
                         </tr>
                         <?php endforeach; ?>
                         <?php else : ?>

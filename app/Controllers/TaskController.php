@@ -50,10 +50,9 @@ class TaskController extends Controller
             $this->redirect('/');
         }
 
-
         $model = Task::findModel($_GET['id']);
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
-            // print_r($_POST['task']); die;
+
             $model->load($_POST['task']);
             if ($model->save()) {
                 $this->addFlash('success', 'Task successfully updated');
