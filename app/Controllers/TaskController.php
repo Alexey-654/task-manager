@@ -9,7 +9,7 @@ class TaskController extends Controller
 {
     public function index()
     {
-        $page = $_GET['page'] ?? 1;
+        $page = (int) ($_GET['page'] ?? 1);
         $sort = $_GET['sort'] ?? 'id desc';
         $pageQuery = isset($_GET['page']) ? "page={$_GET['page']}&" : '';
         $sortQuery = isset($_GET['sort']) ? "&sort={$_GET['sort']}" : '';
@@ -23,6 +23,7 @@ class TaskController extends Controller
                 'totalPages' => $totalPages,
                 'pageQuery' => $pageQuery,
                 'sortQuery' => $sortQuery,
+                'activePage' => $page,
             ]
         );
     }
@@ -46,13 +47,12 @@ class TaskController extends Controller
     public function update()
     {
         if (!\Core\App::$app['user']->isAdmin()) {
-            $this->addFlash('success', 'You don\'t have permission to access this resource');
+            $this->addFlash('danger', 'You don\'t have permission to access this resource');
             $this->redirect('/');
         }
 
         $model = Task::findModel($_GET['id']);
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
-
             $model->load($_POST['task']);
             if ($model->save()) {
                 $this->addFlash('success', 'Task successfully updated');

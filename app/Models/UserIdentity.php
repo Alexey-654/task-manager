@@ -6,9 +6,7 @@ use App\Db\Connection;
 
 class UserIdentity
 {
-    private static $table = 'user';
     public $id;
-    public $role;
     private $login;
     private $password;
 
@@ -17,7 +15,6 @@ class UserIdentity
         $this->id = $data['id'] ?? $this->id;
         $this->login = $data['login'] ?? $this->login;
         $this->password = $data['password'] ?? $this->password;
-        $this->role = $data['role'] ?? $this->role;
     }
 
     public static function findUserByLogin($login)

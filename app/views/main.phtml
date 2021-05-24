@@ -63,7 +63,7 @@
                         <th>email <a class="h5 pr-2" href='?<?= $pageQuery ?>sort=email+desc'>&#9660;</a><a class="h5 pr-2" href='?<?= $pageQuery ?>sort=email+asc'>&#9650;</a></th>
                         <th>description</th>
                         <th>status <a class="h5 pr-2" href='?<?= $pageQuery ?>sort=status+desc'>&#9660;</a><a class="h5 pr-2" href='?<?= $pageQuery ?>sort=status+asc'>&#9650;</a></th>
-                        <th>edited</th>
+                        <th>edited by admin</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,7 +74,7 @@
                             <td><?= htmlspecialchars($task['email']) ?></td>
                             <td><?= htmlspecialchars($task['description']) ?></td>
                             <td><?= htmlspecialchars($task['status']) ?></td>
-                            <td><?= $task['edited'] == 1 ? 'yes' : 'no' ?></td>
+                            <td><?= $task['edited'] ? 'yes' : 'no' ?></td>
                         </tr>
                         <?php endforeach; ?>
                         <?php else : ?>
@@ -86,7 +86,7 @@
             <?php if(isset($totalPages)): ?>
                 <ul class="pagination">
                     <?php for ($i = 1; $i <= $totalPages; $i += 1): ?>
-                    <li class="page-item"><a class="page-link" href="/?page=<?= $i, $sortQuery ?>"><?= $i ?></a></li>
+                    <li class="page-item"><a class="page-link <?= $activePage === $i ? 'bg-secondary' : ''?>" href="/?page=<?= $i, $sortQuery ?>"><?= $i ?></a></li>
                     <?php endfor; ?>
                 </ul>
             <?php endif; ?>

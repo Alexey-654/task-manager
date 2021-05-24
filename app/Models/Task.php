@@ -6,10 +6,6 @@ use App\Db\Connection;
 
 class Task
 {
-    const STATUS_NEW = 1;
-    const STATUS_COMPLETED = 2;
-
-    private static $table = 'task';
     public $id;
     public $name;
     public $email;
@@ -18,16 +14,18 @@ class Task
     public $edited;
     public $errors = [];
 
-    public function load($data = [])
+    public function load($data)
     {
         $this->id = $data['id'] ?? $this->id;
         $this->name = $data['name'] ?? $this->name;
         $this->email = $data['email'] ?? $this->email;
         if(!empty($this->description) && $data['description'] !== $this->description) {
-            $this->edited = true;
+            $this->edited = 1;
+        } else {
+            $this->edited = $data['edited'] ?? 0;
         }
         $this->description = $data['description'] ?? $this->description;
-        $this->status = $data['status'] ?? $this->status;
+        $this->status = $data['status'] ?? 'new';
     }
 
     public function save(): bool

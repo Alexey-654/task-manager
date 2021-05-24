@@ -32,6 +32,7 @@ class AuthController extends Controller
     public function logout()
     {
         if (\Core\App::$app['user']->logout()) {
+            session_start();
             $this->addFlash('success', 'You have been logged out successfully');
             $this->redirect('/');
         } else {
