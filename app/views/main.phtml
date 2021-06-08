@@ -1,3 +1,8 @@
+<?php
+
+use App\Models\Task;
+
+?>
 <!DOCTYPE html>
 <html lang="ru-RU">
 
@@ -73,7 +78,7 @@
                             <td><a href="/update-task?id=<?= $task['id'] ?>"><?= htmlspecialchars($task['name']) ?></a></td>
                             <td><?= htmlspecialchars($task['email']) ?></td>
                             <td><?= htmlspecialchars($task['description']) ?></td>
-                            <td><?= htmlspecialchars($task['status']) ?></td>
+                            <td><?= Task::getStatusList()[$task['status']] ?? 'undefined' ?></td>
                             <td><?= $task['edited'] ? 'yes' : 'no' ?></td>
                         </tr>
                         <?php endforeach; ?>

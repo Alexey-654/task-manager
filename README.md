@@ -1,3 +1,5 @@
-# Test assignment - simple task manager
+# Simple task manager
 
-## on pure PHP without any framework or even libraries :)
+## On pure PHP without any framework or even libraries :)
+
+### result deployed on heroku https://hidden-inlet-95923.herokuapp.com

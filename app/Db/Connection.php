@@ -9,11 +9,19 @@ class Connection
 
     private function __construct()
     {
-        $config = array_merge(
-            require __DIR__ . '/../config/db.php',
-            require __DIR__ . '/../config/db_local.php',
-        );
-        $this->connection = new \PDO($config['dsn'], $config['dbUser'], $config['dbPassword'], $config['dbOptions']);
+        $dbOptions = getenv('DATABASE_URL')
+            ? parse_url(getenv('DATABASE_URL'))
+            : parse_url('pgsql://alex-654:root@localhost:5432/task_manager');
+
+        $dbName = ltrim($dbOptions["path"],'/');
+        $dsn = "pgsql:host={$dbOptions["host"]};dbname={$dbName};port={$dbOptions['port']}";
+
+        $dbOptions['options'] = [
+            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+        ];
+
+        $this->connection = new \PDO($dsn, $dbOptions["user"], $dbOptions["pass"], $dbOptions['options']);
     }
 
     public static function getInstance()

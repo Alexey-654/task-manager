@@ -25,7 +25,7 @@ class Task
             $this->edited = $data['edited'] ?? 0;
         }
         $this->description = $data['description'] ?? $this->description;
-        $this->status = $data['status'] ?? 'new';
+        $this->status = $data['status'] ?? 1;
     }
 
     public function save(): bool
@@ -44,14 +44,14 @@ class Task
     public function insert():bool
     {
         $db = self::getConnection();
-        $stmt = $db->prepare("INSERT INTO task (name, email, description) values (?, ?, ?)");
-        return $stmt->execute([$this->name, $this->email, $this->description]);
+        $stmt = $db->prepare("INSERT INTO tasks (name, email, description, status) values (?, ?, ?, ?)");
+        return $stmt->execute([$this->name, $this->email, $this->description, $this->status]);
     }
 
     public function update():bool
     {
         $db = self::getConnection();
-        $stmt = $db->prepare("UPDATE task SET description = ?, status = ?, edited = ?  WHERE id = ?");
+        $stmt = $db->prepare("UPDATE tasks SET description = ?, status = ?, edited = ?  WHERE id = ?");
         return $stmt->execute([$this->description, $this->status, $this->edited, $this->id]);
     }
 
@@ -71,10 +71,23 @@ class Task
         }
     }
 
+    public function getStatus()
+    {
+        return $this->getStatusList()[$this->status];
+    }
+
+    public static function getStatusList()
+    {
+        return [
+            1 => 'new',
+            10 => 'completed',
+        ];
+    }
+
     public static function findModel($id)
     {
         $db = self::getConnection();
-        $stmt = $db->prepare("SELECT * FROM task WHERE id = ?");
+        $stmt = $db->prepare("SELECT * FROM tasks WHERE id = ?");
         $stmt->execute([$id]);
         $modelData = $stmt->fetch();
         if ($modelData) {
@@ -91,7 +104,7 @@ class Task
         $offset = ($page - 1) * $perPageLimit;
         $sort = explode(' ', $sort);
         [$field, $order] = $sort;
-        $stmt = $db->prepare("SELECT * FROM task ORDER BY $field $order LIMIT :limit OFFSET :offset");
+        $stmt = $db->prepare("SELECT * FROM tasks ORDER BY $field $order LIMIT :limit OFFSET :offset");
         $stmt->bindValue(':limit', $perPageLimit, \PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
         $stmt->execute();
@@ -101,7 +114,7 @@ class Task
     public static function getTasksCount(): int
     {
         $db = self::getConnection();
-        $query = "SELECT COUNT(*) FROM task";
+        $query = "SELECT COUNT(*) FROM tasks";
         return $db->query($query)->fetchColumn();
     }
 
