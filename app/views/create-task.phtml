@@ -1,90 +1,28 @@
-<!DOCTYPE html>
-<html lang="ru-RU">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Create Task</title>
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/dashboard.css" rel="stylesheet">
-</head>
-
-<body>
-
-<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Task Manager</a>
-    <ul class="navbar-nav px-3">
-        <li class="nav-item text-nowrap">
-            <?php if (\Core\App::$app['user']->isAdmin()): ?>
-                <form method="post" class="m-0" action="/logout">
-                    <button type="submit" class="btn btn-primary">
-                        Log Out
-                    </button>
-                </form>
-            <?php else: ?>
-                <a class="btn btn-primary" href="/login" data-method='post'>Log In</a>
-            <?php endif; ?>
-        </li>
-    </ul>
-</nav>
-
-    <div class="container-fluid">
-        <div class="row">
-            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                <div class="sidebar-sticky">
-                </div>
-            </nav>
-        </div>
-        </nav>
-
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-
-    <?php if (isset($_SESSION['flash'])) : ?>
-        <div class="alert alert-<?= $_SESSION['flash']['class'] ?> alert-dismissible fade show" role="alert">
-            <strong><?= $_SESSION['flash']['message'] ?></strong>
-            <?php unset( $_SESSION['flash'] );?>
-        </div>
-    <?php endif; ?>
-
-            <div class="d-flex justify-content-between my-3">
-                <div>
-                    <h1 class="my-0">Create new task</h1>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12 col-lg-5">
-                    <form method="POST">
-                        <div class="form-group">
-                            <input type="text" name="task[name]" class="form-control" placeholder="Name" value="<?= $model->name ?>">
-                            <div class="feedback text-danger">
-                               <?= $model->errors['name']['message'] ?? ''?>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="text" name="task[email]" class="form-control" placeholder="Email" value="<?= $model->email ?>">
-                            <div class="feedback text-danger">
-                                <?= $model->errors['email']['message'] ?? '' ?>
-                            </div>
-                        </div>
-
-
-                        <textarea class="form-control" name="task[description]" rows="3" placeholder="Task description"><?= $model->description ?></textarea>
-                        <div class="feedback text-danger">
-                            <?= $model->errors['description']['message'] ?? '' ?>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary my-3">Submit</button>
-                    </form>
-                </div>
-            </div>
-
-        </main>
+<div class="d-flex justify-content-between my-3">
+    <div>
+        <h1 class="my-0">Create new task</h1>
     </div>
 </div>
-
-
-</body>
-</html>
+<div class="row">
+    <div class="col-12 col-lg-5">
+        <form method="POST">
+            <div class="form-group">
+                <input type="text" name="task[name]" class="form-control" placeholder="Name" value="<?= $model->name ?>">
+                <div class="feedback text-danger">
+                   <?= $model->errors['name']['message'] ?? ''?>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="text" name="task[email]" class="form-control" placeholder="Email" value="<?= $model->email ?>">
+                <div class="feedback text-danger">
+                    <?= $model->errors['email']['message'] ?? '' ?>
+                </div>
+            </div>
+            <textarea class="form-control" name="task[description]" rows="3" placeholder="Task description"><?= $model->description ?></textarea>
+            <div class="feedback text-danger">
+                <?= $model->errors['description']['message'] ?? '' ?>
+            </div>
+            <button type="submit" class="btn btn-primary my-3">Submit</button>
+        </form>
+    </div>
+</div>

@@ -18,7 +18,7 @@ class TaskController extends Controller
         $totalTasks = Task::getTasksCount();
         $totalPages = ceil($totalTasks / $perPageLimit);
 
-        return $this->render('main', [
+        return $this->render('index', [
                 'tasks' => $tasks,
                 'totalPages' => $totalPages,
                 'pageQuery' => $pageQuery,
@@ -34,20 +34,18 @@ class TaskController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $model->load($_POST['task']);
             if ($model->save()) {
-                $this->addFlash('success', 'Task successfully created');
+                $this->setFlash('success', 'Task successfully created');
                 $this->redirect('/');
             }
         }
 
-        return $this->render('create-task', [
-            'model' => $model,
-        ]);
+        return $this->render('create-task', ['model' => $model,]);
     }
 
     public function update()
     {
         if (!\Core\App::$app['user']->isAdmin()) {
-            $this->addFlash('danger', 'You don\'t have permission to access this resource');
+            $this->setFlash('danger', 'You don\'t have permission to access this resource');
             $this->redirect('/');
         }
 
@@ -55,7 +53,7 @@ class TaskController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $model->load($_POST['task']);
             if ($model->save()) {
-                $this->addFlash('success', 'Task successfully updated');
+                $this->setFlash('success', 'Task successfully updated');
                 $this->redirect('/');
             }
         }

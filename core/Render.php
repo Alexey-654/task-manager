@@ -3,19 +3,20 @@
 namespace Core\Render;
 
 
-function render($filepath, $params = [])
+function render($layoutName, $viewName, $variables = [])
 {
-    $viewsDir = realpath(__DIR__ . '/../app/views');
-    $templatePath = "{$viewsDir}/{$filepath}.phtml";
+    $viewDir = realpath(__DIR__ . '/../app/views');
+    $viewFilePath = "{$viewDir}/{$viewName}.phtml";
+    $layoutFilePath = "{$viewDir}/layouts/{$layoutName}.phtml";
 
-    return renderWithAbsolutePath($templatePath, $params);
+    return renderWithAbsolutePath($layoutFilePath, $viewFilePath, $variables);
 }
 
-function renderWithAbsolutePath($template, $variables)
+function renderWithAbsolutePath($layoutFilePath, $viewFilePath, $variables)
 {
     extract($variables);
+    $viewFilePath;
     ob_start();
-    echo 'test';
-    include $template;
+    include $layoutFilePath;
     return ob_get_clean();
 }

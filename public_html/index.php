@@ -27,6 +27,6 @@ $router->post('/update-task', fn() => (new TaskController())->update());
 $router->get('/login', fn() => (new AuthController())->login());
 $router->post('/login', fn() => (new AuthController())->login());
 $router->post('/logout', fn() => (new AuthController())->logout());
-$router->get('error', fn() => render('404'));
+$router->get('error', fn() => render('main', '404'));
 
 $router->run();
