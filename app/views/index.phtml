@@ -34,14 +34,14 @@ use App\Models\Task;
             </tr>
             <?php endforeach; ?>
             <?php else : ?>
-                <tr><td colspan="4">No task so far</td></tr>
+                <tr><td colspan="5">No task so far</td></tr>
         <?php endif ; ?>
     </tbody>
 </table>
 <?php if(isset($totalPages)): ?>
     <ul class="pagination">
         <?php for ($i = 1; $i <= $totalPages; $i += 1): ?>
-        <li class="page-item"><a class="page-link <?= $activePage === $i ? 'bg-secondary' : ''?>" href="/?page=<?= $i, $sortQuery ?>"><?= $i ?></a></li>
+        <li class="page-item"><a class="page-link <?= $activePage === $i ? 'bg-light' : ''?>" href="/?page=<?= $i, $sortQuery ?>"><?= $i ?></a></li>
         <?php endfor; ?>
     </ul>
 <?php endif; ?>

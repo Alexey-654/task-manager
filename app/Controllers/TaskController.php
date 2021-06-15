@@ -2,8 +2,9 @@
 
 namespace App\Controllers;
 
-use App\Models\Task;
 use Core\Controller;
+use Core\App;
+use App\Models\Task;
 
 class TaskController extends Controller
 {
@@ -44,7 +45,7 @@ class TaskController extends Controller
 
     public function update()
     {
-        if (!\Core\App::$app['user']->isAdmin()) {
+        if (!App::getUser()->isAdmin()) {
             $this->setFlash('danger', 'You don\'t have permission to access this resource');
             $this->redirect('/');
         }

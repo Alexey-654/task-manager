@@ -2,7 +2,7 @@
 
 namespace App\Db;
 
-class Connection
+class DbConnection
 {
     private static $instance = null;
     private $connection;
@@ -27,12 +27,12 @@ class Connection
     public static function getInstance()
     {
         if (!self::$instance) {
-            self::$instance = new Connection();
+            self::$instance = new DbConnection();
         }
         return self::$instance;
     }
 
-    public function getConnection()
+    public function getDb()
     {
         return $this->connection;
     }

@@ -1,3 +1,7 @@
+<?php
+use Core\App;
+?>
+
 <!DOCTYPE html>
 <html lang="ru-RU">
 
@@ -15,7 +19,7 @@
         <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Task Manager</a>
         <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
-                <?php if (\Core\App::$app['user']->isAdmin()): ?>
+                <?php if (App::getUser()->isAdmin()): ?>
                 <form method="post" class="m-0" action="/logout">
                     <button type="submit" class="btn btn-primary">
                     Log Out

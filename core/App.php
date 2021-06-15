@@ -10,4 +10,14 @@ class App
     {
         static::$app = $configs;
     }
+
+    public static function getDb()
+    {
+        return static::$app['db'];
+    }
+
+    public static function getUser()
+    {
+        return static::$app['user'];
+    }
 }

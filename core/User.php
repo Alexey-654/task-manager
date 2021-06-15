@@ -4,23 +4,21 @@ namespace Core;
 
 class User
 {
-    private $isAdmin;
+    private $role;
 
-    public function __construct($isAdmin)
+    public function __construct($role)
     {
-        $this->isAdmin = $isAdmin;
+        $this->role = $role;
     }
 
-    public function isAdmin()
+    public function isAdmin(): bool
     {
-        return $this->isAdmin;
+        return $this->role === 'admin';
     }
 
-    public function login($userIdentity)
+    public function login($userIdentity): void
     {
-        if ($userIdentity->role === 'admin') {
-            $this->isAdmin = true;
-        }
+        $this->role = 'admin';
         $_SESSION['identity'] = $userIdentity->id;
     }
 

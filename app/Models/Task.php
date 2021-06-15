@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Db\Connection;
+use Core\BaseModel;
 
-class Task
+class Task extends BaseModel
 {
     public $id;
     public $name;
@@ -14,7 +14,7 @@ class Task
     public $edited;
     public $errors = [];
 
-    public function load($data)
+    public function load($data): void
     {
         $this->id = $data['id'] ?? $this->id;
         $this->name = $data['name'] ?? $this->name;
@@ -43,19 +43,19 @@ class Task
 
     public function insert():bool
     {
-        $db = self::getConnection();
+        $db = static::getDb();
         $stmt = $db->prepare("INSERT INTO tasks (name, email, description, status) values (?, ?, ?, ?)");
         return $stmt->execute([$this->name, $this->email, $this->description, $this->status]);
     }
 
     public function update():bool
     {
-        $db = self::getConnection();
+        $db = static::getDb();
         $stmt = $db->prepare("UPDATE tasks SET description = ?, status = ?, edited = ?  WHERE id = ?");
         return $stmt->execute([$this->description, $this->status, $this->edited, $this->id]);
     }
 
-    public function validate()
+    public function validate(): void
     {
         if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             $this->errors['email']['message'] = 'Email is not valid';
@@ -71,12 +71,12 @@ class Task
         }
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->getStatusList()[$this->status];
     }
 
-    public static function getStatusList()
+    public static function getStatusList(): array
     {
         return [
             1 => 'new',
@@ -86,12 +86,12 @@ class Task
 
     public static function findModel($id)
     {
-        $db = self::getConnection();
+        $db = static::getDb();
         $stmt = $db->prepare("SELECT * FROM tasks WHERE id = ?");
         $stmt->execute([$id]);
         $modelData = $stmt->fetch();
         if ($modelData) {
-            $model = new self();
+            $model = new static();
             $model->load($modelData);
             return $model;
         }
@@ -100,7 +100,7 @@ class Task
 
     public static function getTasks($page, $sort, $perPageLimit = 3): array
     {
-        $db = self::getConnection();
+        $db = static::getDb();
         $offset = ($page - 1) * $perPageLimit;
         $sort = explode(' ', $sort);
         [$field, $order] = $sort;
@@ -113,13 +113,8 @@ class Task
 
     public static function getTasksCount(): int
     {
-        $db = self::getConnection();
+        $db = static::getDb();
         $query = "SELECT COUNT(*) FROM tasks";
         return $db->query($query)->fetchColumn();
-    }
-
-    private static function getConnection(): \PDO
-    {
-        return Connection::getInstance()->getConnection();
     }
 }

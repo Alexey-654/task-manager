@@ -1,10 +1,10 @@
 <?php
 
-use App\Db\Connection;
+use App\Db\DbConnection;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-$db = Connection::getInstance()->getConnection();
+$db = DbConnection::getInstance()->getDb();
 $sql = <<<SQL
     CREATE TABLE IF NOT EXISTS tasks (
 	id serial PRIMARY KEY,

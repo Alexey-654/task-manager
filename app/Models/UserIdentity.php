@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
-use App\Db\Connection;
+use Core\BaseModel;
 
-class UserIdentity
+class UserIdentity extends BaseModel
 {
     public $id;
-    // public $role;
     private $login;
     private $password;
 
-    public function load($data = [])
+    public function load($data = []): void
     {
         $this->id = $data['id'] ?? $this->id;
         $this->login = $data['login'] ?? $this->login;
@@ -20,12 +19,12 @@ class UserIdentity
 
     public static function findUserByLogin($login)
     {
-        $db = self::getConnection();
+        $db = static::getDb();
         $stmt = $db->prepare("SELECT * FROM users WHERE login = ?");
         $stmt->execute([$login]);
         $modelData = $stmt->fetch();
         if ($modelData) {
-            $model = new self();
+            $model = new static();
             $model->load($modelData);
             return $model;
         }
@@ -35,10 +34,5 @@ class UserIdentity
     public function validatePassword($password): bool
     {
         return password_verify($password, $this->password);
-    }
-
-    private static function getConnection(): \PDO
-    {
-        return Connection::getInstance()->getConnection();
     }
 }
