@@ -2,22 +2,26 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+use function Core\Render\render;
 use Core\Router;
 use Core\App;
+use Core\User;
 use App\Controllers\TaskController;
 use App\Controllers\AuthController;
-use Core\User;
-use function Core\Render\render;
+use App\Db\DbConnection;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 session_start();
 
-$user = isset($_SESSION['identity']) ? new User(true) : new User(false);
-
-$app = new App(['user' => $user]);
-
+$user = isset($_SESSION['identity']) ? new User('admin') : new User('guest');
+$db = DbConnection::getInstance()->getDb();
 $router = new Router();
+
+$app = new App([
+    'user' => $user,
+    'db' => $db,
+]);
 
 $router->get('/', fn() => (new TaskController())->index());
 $router->get('/create-task', fn() => (new TaskController())->create());
