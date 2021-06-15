@@ -5,7 +5,7 @@
 Result deployed on heroku https://hidden-inlet-95923.herokuapp.com
 
 Log in as admin
-- login: email
+- login: admin
 - password: 123
 
 Main task crate application with
